@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace TestWebAPIApplication.Models
@@ -34,6 +36,21 @@ namespace TestWebAPIApplication.Models
             objEmp.EmpId = nextEmpId++;
             emp.Add(objEmp);
             return objEmp;
+        }
+        public static async Task<double> calculate()
+        {
+            double count = 0;
+            HttpClient client = new HttpClient();
+            Random rnd = new Random();
+            double countD = 0;
+            for (int i = 1; i <= 3; i++)
+            {
+                HttpResponseMessage response = await client.GetAsync(new Uri("http://localhost:13806/api/employee/getemployee?empid=" + i));
+                var json = await response.Content.ReadAsStringAsync();
+                count = json.ToString().Count(x => x == 'E');
+                countD = Math.Tan(count) + rnd.Next(1, 100);
+            }
+            return countD;
         }
     }
 }
